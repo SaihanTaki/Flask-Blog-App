@@ -1,0 +1,64 @@
+{% extends "base.html" %} {% block content %}
+<div class="content-section border border-1 rounded mt-3 mb-3">
+    <div class="d-flex">
+        <div class="flex-shrink-0">
+            <img src="{{ image_file }}" alt="..." class="account-img" />
+        </div>
+        <div class="flex-grow-1 ms-3">
+            <h3 class="mt-0">{{ current_user.username.capitalize() }}</h3>
+        <h6 class="text-secondary">{{ current_user.email }}</h6>
+        </div>
+    </div>
+    
+      <form method="POST" action="" enctype="multipart/form-data" class="">
+          {{ form.hidden_tag() }}
+          <div class="mb-4">
+              <legend class="border-bottom mb-4">Account Info</legend>
+              <div class="mb-3">
+                  {{ form.username.label(class="form-label") }}
+
+                  {% if form.username.errors %}
+                      {{ form.username(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.username.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.username(class="form-control form-control-lg") }}
+                  {% endif %}
+              </div>
+              <div class="mb-3">
+                  {{ form.email.label(class="form-label") }}
+                  {% if form.email.errors %}
+                      {{ form.email(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in form.email.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form.email(class="form-control form-control-lg") }}
+                  {% endif %}
+              </div>
+              <div class="mb-3">
+                  {{ form.picture.label(class="form-label") }}
+                  {{ form.picture(class="form-control form-control-lg") }}
+                  {% if form.picture.errors %}
+                      {% for error in form.picture.errors %}
+                          <span class="text-danger">{{ error }}</span></br>
+                      {% endfor %}
+                  {% endif %}
+              </div>
+              <div class="mb-0">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+            </div>
+      </form>
+      {% if user == current_user %}
+      <form action="{{url_for('users.delete_user', username=user.username)}}" method="POST">
+        <input type="submit" class="btn btn-danger btn-sm m-1" value="Delete Account">
+      </form>
+      {% endif %}
+  </div>
+{% endblock %}

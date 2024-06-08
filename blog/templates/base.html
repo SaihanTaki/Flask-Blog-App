@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+            defer
+        ></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+    {% if title %}
+        <title>Flask Blog - {{ title }}</title>
+    {% else %}
+        <title>Flask Blog</title>
+    {% endif %}
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{url_for('main.home')}}">MyBlog</a>
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup"
+                        aria-controls="navbarNavAltMarkup"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div
+                        class="collapse navbar-collapse"
+                        id="navbarNavAltMarkup"
+                    >
+                        <div class="navbar-nav">
+                            <a class="nav-link" href="{{url_for('main.home')}}">Home</a>
+                            <a class="nav-link" href="{{ url_for('main.about')}}">About</a>
+                            {% if current_user.is_authenticated %}
+                            <a class="nav-link" href="{{url_for('posts.create_post')}}">New Post</a>
+                            {% if current_user.username == 'admin' %}
+                            <a class="nav-link" href="/admin">Admin</a>
+                            {% endif %}
+                            <a class="nav-link" href="{{url_for('users.account')}}">Account</a>
+                            <a class="nav-link" href="{{url_for('users.logout')}}">Logout</a>
+                            {% else %}
+                            <a class="nav-link" href="{{url_for('users.login')}}">Login</a>
+                            <a class="nav-link" href="{{url_for('users.register')}}">Register</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="container">
+            <div class="row">
+                <div class="col-md-8">
+                  {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                      {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                  {% block content %}{% endblock %}
+                </div>
+                <div class="col-md-4">
+                  <div class="content-section">
+                    <h3>Our Sidebar</h3>
+                    <p class='text-muted'>You can put any information here you'd like.
+                      <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">Latest Posts</li>
+                        <li class="list-group-item list-group-item-dark">Announcements</li>
+                        <li class="list-group-item list-group-item-light">Calendars</li>
+                        <li class="list-group-item list-group-item-dark">etc</li>
+                      </ul>
+                    </p>
+                  </div>
+                </div>
+              </div>
+        </main>
+    </body>
+</html>
